@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Pedal Builder - Robotabot Blog
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="A blog about programming, diy, and stuff">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/custom.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Pedal Builder</h1>
+        <p class="author">Written by <span class="author"><a href="mailto:robotabot@gmail.com">Lou Mortenson</a></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>Pedal Builder: Finally A Real&nbsp;Program</p>
+<p><span class="more"></span></p>
+<p>Pedal Builder is a project I started to get practice with C#, <span class="caps">SQL</span>, and Windows applications.  I also needed a way to easily order components for several guitar pedals at once.  It uses WPF and Entity Framework for databinding, and the excellent <a href="http://mahapps.com/">Mahapps.Metro</a> for a slick <span class="caps">UI</span>&nbsp;presentation.</p>
+<p><a href="https://github.com/robotabot/pedal-builder-2">-&gt; Link to the project on github&nbsp;&lt;-</a></p>
+<p>I decided to build a standalone desktop application because I didn’t want it to be tied to the internet.  I also didn’t want a user of the program to have to have <span class="caps">SQL</span> Server installed and running for this simple app, so I chose to use SQL Server CE, which allows for a no-install local database&nbsp;file.</p>
+<p><img src="/articles/pedal-builder/pedals.PNG" alt="The Pedals Tab"></p>
+<p>The program interfaces with database tables for pedals, components, and parts.  A user can create a pedal, then create several components, and then add those components to the part list for a pedal.  As components are added to a pedal, the cost to build the pedal is updated and&nbsp;displayed.</p>
+<p><img src="/articles/pedal-builder/components.PNG" alt="The Components Tab"></p>
+<p>The special feature of the program is the order tab.  Once pedals are added to an order, the aggregated list of components for all pedals is shown on a Datagrid.  Each row represents a component and displays the quantity which needs to be ordered for all pedals.  If the row is double clicked, the user’s browser will open to the url specified.  A checkbox for each part allows the user to keep track of which parts they have added to a vendor’s cart or ordered. Since each pedal can contain anywhere from a handful to over one  hundred parts, having an aggregated list is an important feature that differentiates this program from a simple spreadsheet.  The total number of different parts and the total cost for all pedals being ordered is also&nbsp;displayed.</p>
+<p><img src="/articles/pedal-builder/order.PNG" alt="The Order Tab"></p>
+<p>In the Autofill tab the user can choose to fill the database with a few hundred of the common values of resistors, saving them the time and effort required to do it manually.  A good feature for a future version would be to add options to fill in other components such as capacitors, jacks, and&nbsp;enclosures.</p>
+<p>At the bottom of the program window is a status bar which displays a context sensitive message when pedals, components, or parts are added or removed.  The message makes use of a <span class="caps">WPF</span> animation to fade out over 5&nbsp;seconds.</p>
+<h5 id="what-i-learned">What I&nbsp;Learned</h5>
+<p>I learned a lot about using Microsoft technologies.  In the first version of this project, I used SQLite, Entity Framework, and WinForms.  When I built the second version, I decided to change to <span class="caps">WPF</span> and SQL Server Express.  I learned a little about using XAML to lay out my program.  The data-driven nature meant that I used several datagrids, and I learned about binding them to a CollectionViewSource and creating a detail binding.  Although in the beginning I intended to use the datagrids’ built in behavior to create, edit, and delete pedals and components, I ran into issues with the empty new row that is automatically added.  As a result, I implemented text boxes to represent the data fields.  This is something I need to do more research&nbsp;on.</p>
+<p>Eventually I brought in the Mahapps.Metro framework for a nice polished <span class="caps">UI</span>.  To their credit this was a painless process even for an existing application.  They have excellent documentation for their controls and their integration makes their use as easy as any of the normal&nbsp;controls.</p>
+<p>My initial version used Entity Framework, and I got more practice using it in the second version as well.  In the first version I used the entity designer to create a model and database.  When I started on the second version, I generated the models from the database.  One specific thing I rediscovered from my database class was decimal precision and scale, which I first set to 9,9, resulting in a field which wouldn’t accept any numbers in front of the decimal point.  I also learned that creating and disposing of a new context is not a bad thing, as it handles the many changes that can accumulate.  I have not hit the point that I need to use Entity Framework migrations, but I get the feeling that it may be a pain point for the&nbsp;framework.</p>
+<p>My first experiments with <span class="caps">SQL</span> Server Express and the database seeding method I created were slow.  Inserting a few hundred records took around ten seconds, during which the user couild not interact with the program.  I attempted several fixes, including disabling validation, to no avail.  Due to these issues and concerns I had about installation I decided to try out SQL Server CE.  I used the <a href="https://sqlcetoolbox.codeplex.com/"><span class="caps">SQL</span> Server Compact <span class="amp">&amp;</span> SQLite Toolbox</a> to generate a <span class="caps">SQL</span> Server CE database.  I ended up recreating the Entity Framework context after this, but once it was working I discovered that the seeding method ran&nbsp;instantaneously.</p>
+<p>This is also my first installable program.  I learned how to create a Visual Studio Installer project using that extension.  It is a simpler process than I thought it might be.  I found out that when Microsoft released Windows 8, they deprecated the install template and replaced it with the InstallShield Express product because they wanted to encourage Modern app development.  Unhappy developers spoke up and Microsoft had to release an extension to replace the functionality they had&nbsp;removed.</p>
+<p>This is the first project that I have finished outside of school.  Although I have no problem completing assignments for my courses, when I develop my own apps I seem to run into roadblocks, distractions, and other things which consume my time and draw me away from the project.  If I’m not consumed by math courses I see something new and awesome to learn.  I had actually started this project as a web app running on node and mongodb months ago.  Even though it has issues, I am very proud of the outcome and I have already used it to order components for a couple of&nbsp;pedals.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+        </section>
+        <section class="copy">
+          <p> <span>&copy; 2015&nbsp</span><a href="mailto:robotabot@gmail.com">Lou Mortenson&nbsp</a><span>&mdash; powered by&nbsp;</span><a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

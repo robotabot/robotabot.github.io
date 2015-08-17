@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Seeding Mongo - Robotabot Blog
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="A blog about programming, diy, and stuff">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/custom.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Seeding Mongo</h1>
+        <p class="author">Written by <span class="author"><a href="mailto:robotabot@gmail.com">Lou Mortenson</a></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>A Short Lesson In Objects And&nbsp;<span class="caps">CRUD</span></p>
+<p><span class="more"></span></p>
+<p>While working on my <span class="caps">DIY</span> guitar pedal order builder (link to come) I run into&nbsp;problems.</p>
+<p>I am using the project to learn Angular and node.js using the excellent <a href="https://github
+.com/DaftMonk/generator-angular-fullstack">angular-fullstack</a> yeoman generator, so I am always 
+encountering new situations.  I have a 
+mongoDB collection for Pedals and another for Components.  The Component schema is nested within pedals like&nbsp;so:</p>
+<pre><code>var PedalSchema = new Schema({
+  name: String,
+  url: String,
+  components: [{
+    type: mongoose.Schema.ObjectId,
+    ref: &#39;Component&#39;
+  }]
+});
+</code></pre><p>When Pedals are retrieved from the database Mongoose’s populate method provides the components of each 
+pedal.  But when I tried to test this functionality, no components were being&nbsp;returned.</p>
+<p><em>Why?</em>  I had used Robomongo to retrieve Component ids and hardcoded them into seed.js, the file which populates the 
+dev database every time the server&nbsp;restarts.</p>
+<pre><code>//seed.js snippet
+
+Pedal.find({}).remove(function() {
+    Pedal.create({
+      name: &#39;1776 Multiplex&#39;,
+      url: &#39;1776effects.com/store/&#39;,
+      components: []
+    }, {
+      name: &#39;Madbean Honeydripper&#39;,
+      url: &#39;http://madbeanpedals.com/projects/index.html&#39;,
+      components: []
+    }, function() {
+      console.log(&#39;finished populating pedals&#39;)
+    });
+  });
+</code></pre><p>Still nothing.  The light bulb moment came when I used Robomongo to inspect the components again.  Of course! Every 
+time the server restarts the collections are removed and recreated, resulting in different ObjectIds.  Once I had my 
+epiphany it was a simple matter to refactor <code>seed.js</code> to use the ObjectIds of the seeded components.  Now when the 
+Pedal collection is created it uses the correct Component objects when creating new&nbsp;Pedals.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+        </section>
+        <section class="copy">
+          <p> <span>&copy; 2015&nbsp</span><a href="mailto:robotabot@gmail.com">Lou Mortenson&nbsp</a><span>&mdash; powered by&nbsp;</span><a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>

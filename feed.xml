@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/" xmlns:wfw="http://wellformedweb.org/CommentAPI/" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Robotabot Blog</title>
+    <atom:link href="http://localhost:8080/feed.xml" rel="self" type="application/rss+xml"></atom:link>
+    <link>http://localhost:8080</link>
+    <description>A blog about programming, diy, and stuff</description>
+    <pubDate>Fri, 14  Aug 2015 20:00:00 -0400</pubDate>
+    <generator>Wintersmith - https://github.com/jnordberg/wintersmith</generator>
+    <language>en</language>
+    <item>
+      <title>Pedal Builder</title>
+      <link>http://localhost:8080/articles/pedal-builder/</link>
+      <pubDate>Fri, 14  Aug 2015 20:00:00 -0400</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/pedal-builder/</guid>
+      <author></author>
+      <description>&lt;p&gt;Pedal Builder: Finally A Real Program&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Pedal Builder is a project I started to get practice with C#, SQL, and Windows applications.  I also needed a way to easily order components for several guitar pedals at once.  It uses WPF and Entity Framework for databinding, and the excellent &lt;a href=&quot;http://mahapps.com/&quot;&gt;Mahapps.Metro&lt;/a&gt; for a slick UI presentation.&lt;/p&gt;
+&lt;p&gt;&lt;a href=&quot;https://github.com/robotabot/pedal-builder-2&quot;&gt;-&amp;gt; Link to the project on github &amp;lt;-&lt;/a&gt;&lt;/p&gt;
+&lt;p&gt;I decided to build a standalone desktop application because I didn’t want it to be tied to the internet.  I also didn’t want a user of the program to have to have SQL Server installed and running for this simple app, so I chose to use SQL Server CE, which allows for a no-install local database file.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/pedal-builder/pedals.PNG&quot; alt=&quot;The Pedals Tab&quot;&gt;&lt;/p&gt;
+&lt;p&gt;The program interfaces with database tables for pedals, components, and parts.  A user can create a pedal, then create several components, and then add those components to the part list for a pedal.  As components are added to a pedal, the cost to build the pedal is updated and displayed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/pedal-builder/components.PNG&quot; alt=&quot;The Components Tab&quot;&gt;&lt;/p&gt;
+&lt;p&gt;The special feature of the program is the order tab.  Once pedals are added to an order, the aggregated list of components for all pedals is shown on a Datagrid.  Each row represents a component and displays the quantity which needs to be ordered for all pedals.  If the row is double clicked, the user’s browser will open to the url specified.  A checkbox for each part allows the user to keep track of which parts they have added to a vendor’s cart or ordered. Since each pedal can contain anywhere from a handful to over one  hundred parts, having an aggregated list is an important feature that differentiates this program from a simple spreadsheet.  The total number of different parts and the total cost for all pedals being ordered is also displayed.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/pedal-builder/order.PNG&quot; alt=&quot;The Order Tab&quot;&gt;&lt;/p&gt;
+&lt;p&gt;In the Autofill tab the user can choose to fill the database with a few hundred of the common values of resistors, saving them the time and effort required to do it manually.  A good feature for a future version would be to add options to fill in other components such as capacitors, jacks, and enclosures.&lt;/p&gt;
+&lt;p&gt;At the bottom of the program window is a status bar which displays a context sensitive message when pedals, components, or parts are added or removed.  The message makes use of a WPF animation to fade out over 5 seconds.&lt;/p&gt;
+&lt;h5 id=&quot;what-i-learned&quot;&gt;What I Learned&lt;/h5&gt;
+&lt;p&gt;I learned a lot about using Microsoft technologies.  In the first version of this project, I used SQLite, Entity Framework, and WinForms.  When I built the second version, I decided to change to WPF and SQL Server Express.  I learned a little about using XAML to lay out my program.  The data-driven nature meant that I used several datagrids, and I learned about binding them to a CollectionViewSource and creating a detail binding.  Although in the beginning I intended to use the datagrids’ built in behavior to create, edit, and delete pedals and components, I ran into issues with the empty new row that is automatically added.  As a result, I implemented text boxes to represent the data fields.  This is something I need to do more research on.&lt;/p&gt;
+&lt;p&gt;Eventually I brought in the Mahapps.Metro framework for a nice polished UI.  To their credit this was a painless process even for an existing application.  They have excellent documentation for their controls and their integration makes their use as easy as any of the normal controls.&lt;/p&gt;
+&lt;p&gt;My initial version used Entity Framework, and I got more practice using it in the second version as well.  In the first version I used the entity designer to create a model and database.  When I started on the second version, I generated the models from the database.  One specific thing I rediscovered from my database class was decimal precision and scale, which I first set to 9,9, resulting in a field which wouldn’t accept any numbers in front of the decimal point.  I also learned that creating and disposing of a new context is not a bad thing, as it handles the many changes that can accumulate.  I have not hit the point that I need to use Entity Framework migrations, but I get the feeling that it may be a pain point for the framework.&lt;/p&gt;
+&lt;p&gt;My first experiments with SQL Server Express and the database seeding method I created were slow.  Inserting a few hundred records took around ten seconds, during which the user couild not interact with the program.  I attempted several fixes, including disabling validation, to no avail.  Due to these issues and concerns I had about installation I decided to try out SQL Server CE.  I used the &lt;a href=&quot;https://sqlcetoolbox.codeplex.com/&quot;&gt;SQL Server Compact &amp;amp; SQLite Toolbox&lt;/a&gt; to generate a SQL Server CE database.  I ended up recreating the Entity Framework context after this, but once it was working I discovered that the seeding method ran instantaneously.&lt;/p&gt;
+&lt;p&gt;This is also my first installable program.  I learned how to create a Visual Studio Installer project using that extension.  It is a simpler process than I thought it might be.  I found out that when Microsoft released Windows 8, they deprecated the install template and replaced it with the InstallShield Express product because they wanted to encourage Modern app development.  Unhappy developers spoke up and Microsoft had to release an extension to replace the functionality they had removed.&lt;/p&gt;
+&lt;p&gt;This is the first project that I have finished outside of school.  Although I have no problem completing assignments for my courses, when I develop my own apps I seem to run into roadblocks, distractions, and other things which consume my time and draw me away from the project.  If I’m not consumed by math courses I see something new and awesome to learn.  I had actually started this project as a web app running on node and mongodb months ago.  Even though it has issues, I am very proud of the outcome and I have already used it to order components for a couple of pedals.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>3D Shapes</title>
+      <link>http://localhost:8080/articles/3d-shapes/</link>
+      <pubDate>Sun, 19 Apr 2015 20:00:00 -0400</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/3d-shapes/</guid>
+      <author></author>
+      <description>&lt;p&gt;A little kindergarden shape practice page&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;My son in kindergarden needed some help learning his 3D shapes.  I thought this was a good opportunity to build a simple webpage with a little interactivity, so I modeled up the shapes in Blender and rendered them out in different colors.  A short page with some visual and audio feedback and my son is practicing away.&lt;/p&gt;
+&lt;p&gt;Here it is: &lt;a href=&quot;https://robotabot.github.io/3Dshapes&quot;&gt;3D Shapes&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>I'm A Belieber</title>
+      <link>http://localhost:8080/articles/ima-belieber/</link>
+      <pubDate>Thu, 26 Feb 2015 19:00:00 -0500</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/ima-belieber/</guid>
+      <author></author>
+      <description>&lt;p&gt;My First Chrome Extension&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;Word replacer chrome extensions are all over these days.  Though I’m far from a ‘belieber’ myself, I thought it would be fun to build a chrome extension which replaces ‘believe’ with ‘belieb’.  And it was.  Extension development is pretty easy to get started with.  Just one json file and one javascript file for this extension.&lt;/p&gt;
+&lt;p&gt;Here it is: &lt;a href=&quot;https://github.com/robotabot/imabelieber&quot;&gt;I’m a belieber&lt;/a&gt;&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Saving to Mongo</title>
+      <link>http://localhost:8080/articles/updating-in-mongoose/</link>
+      <pubDate>Thu, 26 Feb 2015 19:00:00 -0500</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/updating-in-mongoose/</guid>
+      <author></author>
+      <description>&lt;p&gt;How Not To Do CRUD&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;I’m using Mongoose on top of Mongo in my Pedal Projects project.  Mongoose can be nice to use.  The populate method retrieves sub-documents from an ObjectId or array of ObjectIds.  So I get all of a Pedal’s Components when I query for it.  Great!&lt;/p&gt;
+&lt;p&gt;Not so great when I try to update a Pedal in the database.  Over a couple of days I spent way too many hours trying to figure out why I couldn’t update Pedals in the database.  Of course I was trying to update the Pedal right from my $scope.  So all the components were in it.  Once I figured out why my Pedals weren’t updating and started passing just the ObjectIds I finally had success.  Then I called myself a dumbass.&lt;/p&gt;
+&lt;p&gt;The worst part is after I had figured out the problem I fuzzily recalled seeing a warning about it somewhere.  So if you’re using mongoose, consider this your warning: make sure you’re not passing along your sub-documents in an update.&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>A Naked Ultrastoner</title>
+      <link>http://localhost:8080/articles/a-naked-ultrastoner/</link>
+      <pubDate>Wed, 25 Feb 2015 19:00:00 -0500</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/a-naked-ultrastoner/</guid>
+      <author></author>
+      <description>&lt;p&gt;A Big Muff Pi Variant&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/a-naked-ultrastoner/Ultrastoner-board-bottom-612x612.JPG&quot; alt=&quot;Ultrastoner Board Bottom&quot;&gt;&lt;/p&gt;
+&lt;p&gt;What is this little thing?  You’re peeping an Ultrastoner guitar pedal.  It’s a variant of the ubiquitous Big Muff Pi created by &lt;a href=&quot;http://stompage.juansolo.co.uk/&quot;&gt;Juan and Cleggy&lt;/a&gt;, a couple of Gents from Across the Pond.  They are huge fans of bmp pedals.&lt;/p&gt;
+&lt;p&gt;It’s pretty ugly, melted caps, parallel caps and serial resistors and all, but it sounds awesome!  It’s the first diy pedal I’ve assembled and it fired up right off the bat.  Now I need to drill and paint an enclosure.  It’s a good idea to test your pedals before you box them up because problems will be easier to solve.&lt;/p&gt;
+&lt;p&gt;If you’re looking for the pcb, you can find it over at &lt;a href=&quot;http://www.grindcustomsfx.com/&quot;&gt;Grind Customs&lt;/a&gt;.  There’s also a great build doc which will help you put together just about any kind of muff you want from that one board.&lt;/p&gt;
+&lt;p&gt;&lt;img src=&quot;/articles/a-naked-ultrastoner/Ultrastoner-board-top-612x612.JPG&quot; alt=&quot;Ultrastoner Board Top&quot;&gt;&lt;/p&gt;
+</description>
+    </item>
+    <item>
+      <title>Seeding Mongo</title>
+      <link>http://localhost:8080/articles/seeding-mongoose/</link>
+      <pubDate>Wed, 25 Feb 2015 19:00:00 -0500</pubDate>
+      <guid isPermaLink="true">http://localhost:8080/articles/seeding-mongoose/</guid>
+      <author></author>
+      <description>&lt;p&gt;A Short Lesson In Objects And CRUD&lt;/p&gt;
+&lt;p&gt;&lt;span class=&quot;more&quot;&gt;&lt;/span&gt;&lt;/p&gt;
+&lt;p&gt;While working on my DIY guitar pedal order builder (link to come) I run into problems.&lt;/p&gt;
+&lt;p&gt;I am using the project to learn Angular and node.js using the excellent &lt;a href=&quot;https://github
+.com/DaftMonk/generator-angular-fullstack&quot;&gt;angular-fullstack&lt;/a&gt; yeoman generator, so I am always 
+encountering new situations.  I have a 
+mongoDB collection for Pedals and another for Components.  The Component schema is nested within pedals like so:&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;var PedalSchema = new Schema({
+  name: String,
+  url: String,
+  components: [{
+    type: mongoose.Schema.ObjectId,
+    ref: &amp;#39;Component&amp;#39;
+  }]
+});
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;When Pedals are retrieved from the database Mongoose’s populate method provides the components of each 
+pedal.  But when I tried to test this functionality, no components were being returned.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;Why?&lt;/em&gt;  I had used Robomongo to retrieve Component ids and hardcoded them into seed.js, the file which populates the 
+dev database every time the server restarts.&lt;/p&gt;
+&lt;pre&gt;&lt;code&gt;//seed.js snippet
+
+Pedal.find({}).remove(function() {
+    Pedal.create({
+      name: &amp;#39;1776 Multiplex&amp;#39;,
+      url: &amp;#39;1776effects.com/store/&amp;#39;,
+      components: []
+    }, {
+      name: &amp;#39;Madbean Honeydripper&amp;#39;,
+      url: &amp;#39;http://madbeanpedals.com/projects/index.html&amp;#39;,
+      components: []
+    }, function() {
+      console.log(&amp;#39;finished populating pedals&amp;#39;)
+    });
+  });
+&lt;/code&gt;&lt;/pre&gt;&lt;p&gt;Still nothing.  The light bulb moment came when I used Robomongo to inspect the components again.  Of course! Every 
+time the server restarts the collections are removed and recreated, resulting in different ObjectIds.  Once I had my 
+epiphany it was a simple matter to refactor &lt;code&gt;seed.js&lt;/code&gt; to use the ObjectIds of the seeded components.  Now when the 
+Pedal collection is created it uses the correct Component objects when creating new Pedals.&lt;/p&gt;
+</description>
+    </item>
+  </channel>
+</rss>

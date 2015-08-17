@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width">
+    <title>Saving to Mongo - Robotabot Blog
+    </title>
+    <link rel="alternate" href="http://localhost:8080/feed.xml" type="application/rss+xml" title="A blog about programming, diy, and stuff">
+    <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lora:400,700,400italic,700italic|Anonymous+Pro:400,700,400italic,700italic|Merriweather:400,700,300">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/custom.css">
+  </head>
+  <body class="article-detail">
+    <header class="header">
+      <div class="content-wrap">
+        <h1>Saving to Mongo</h1>
+        <p class="author">Written by <span class="author"><a href="mailto:robotabot@gmail.com">Lou Mortenson</a></span>
+        </p>
+      </div>
+    </header>
+    <div id="content">
+      <div class="content-wrap">
+        <article class="article">
+          <section class="content"><p>How Not To Do&nbsp;<span class="caps">CRUD</span></p>
+<p><span class="more"></span></p>
+<p>I’m using Mongoose on top of Mongo in my Pedal Projects project.  Mongoose can be nice to use.  The populate method retrieves sub-documents from an ObjectId or array of ObjectIds.  So I get all of a Pedal’s Components when I query for it.&nbsp;Great!</p>
+<p>Not so great when I try to update a Pedal in the database.  Over a couple of days I spent way too many hours trying to figure out why I couldn’t update Pedals in the database.  Of course I was trying to update the Pedal right from my $scope.  So all the components were in it.  Once I figured out why my Pedals weren’t updating and started passing just the ObjectIds I finally had success.  Then I called myself a&nbsp;dumbass.</p>
+<p>The worst part is after I had figured out the problem I fuzzily recalled seeing a warning about it somewhere.  So if you’re using mongoose, consider this your warning: make sure you’re not passing along your sub-documents in an&nbsp;update.</p>
+</section>
+        </article>
+      </div>
+    </div>
+    <footer>
+      <div class="content-wrap">
+        <div class="nav"><a href="/">« Full blog</a></div>
+        <section class="about">
+        </section>
+        <section class="copy">
+          <p> <span>&copy; 2015&nbsp</span><a href="mailto:robotabot@gmail.com">Lou Mortenson&nbsp</a><span>&mdash; powered by&nbsp;</span><a href="https://github.com/jnordberg/wintersmith">Wintersmith</a>
+          </p>
+        </section>
+      </div>
+    </footer>
+  </body>
+</html>
